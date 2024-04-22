@@ -1,0 +1,18 @@
+# Question:
+
+Find the top 10 users that have traveled the greatest distance. Output their id, name and a total distance traveled.
+
+
+# Answer:
+
+with totaldist as (
+    select user_id, sum(distance) as total_distance
+    from lyft_rides_log
+    group by user_id)
+    
+select t.user_id, u.name, t.total_distance
+from totaldist t
+join lyft_users u
+on t.user_id = u.id
+order by t.total_distance desc
+limit 10;
