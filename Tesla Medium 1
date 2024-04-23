@@ -1,0 +1,10 @@
+# Question:
+
+You are given a table of product launches by company by year. Write a query to count the net difference between the number of products companies launched in 2020 with the number of products companies launched in the previous year. Output the name of the companies and a net difference of net products released for 2020 compared to the previous year.
+
+
+# Answer:
+
+select company_name, (sum(if(year = 2020, 1, 0)) - sum(if(year = 2019, 1, 0))) as diff
+from car_launches
+group by company_name;
