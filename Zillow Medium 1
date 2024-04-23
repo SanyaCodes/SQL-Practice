@@ -1,0 +1,16 @@
+# Question:
+
+Write a query that identifies cities with higher than average home prices when compared to the national average. Output the city names.
+
+
+# Answer:
+
+with cityavg as (
+    select city, avg(mkt_price) as avg_city_price
+    from zillow_transactions
+    group by city)
+    
+select city 
+from cityavg
+where avg_city_price > (select AVG(mkt_price) as nat_avg
+                       		 from zillow_transactions);
