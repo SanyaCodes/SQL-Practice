@@ -1,0 +1,34 @@
+# Question:
+
+Identify projects that are at risk for going over budget. A project is considered to be over budget if the cost of all employees assigned to the project is greater than the budget of the project. You'll need to prorate the cost of the employees to the duration of the project. For example, if the budget for a project that takes half a year to complete is $10K, then the total half-year salary of all employees assigned to the project should not exceed $10K. Salary is defined on a yearly basis, so be careful how to calculate salaries for the projects that last less or more than one year. Output a list of projects that are over budget with their project name, project budget, and prorated total employee expense (rounded to the next dollar amount).
+
+HINT: to make it simpler, consider that all years have 365 days. You don't need to think about the leap years.
+
+
+# Answer:
+
+with cte1 as (
+    select id, title, budget, datediff(end_date, start_date) as duration_in_days
+    from linkedin_projects
+    ),
+
+cte2 as (
+    select ep.emp_id, ep.project_id, e.salary/365 as salary_per_day
+    from linkedin_emp_projects ep
+    join linkedin_employees e
+    on ep.emp_id = e.id
+    ),
+    
+cte3 as (
+    select project_id, sum(salary_per_day) as total_emp_cost
+    from cte2
+    group by project_id
+    )
+
+select * 
+from (select a.title, a.budget, ceiling(round(b.total_emp_cost * a.duration_in_days)) as prorated_total
+        from cte1 a
+        join cte3 b
+        on a.id = b.project_id) k 
+where prorated_total>budget
+order by title;
