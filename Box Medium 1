@@ -1,0 +1,11 @@
+# Question:
+
+To find the largest difference in total score of all assignments, we need to calculate the sum of all three assignments for each student and then find the difference between the highest and lowest scores.
+
+
+# Answer:
+
+select (max(total_score)-min(total_score)) as score_diff
+from (select student, sum(assignment1 + assignment2 + assignment3) as total_score
+        from box_scores
+        group by student) k;
