@@ -1,0 +1,18 @@
+# Question:
+
+Given a list of projects and employees mapped to each project, calculate by the amount of project budget allocated to each employee . The output should include the project title and the project budget rounded to the closest integer. Order your list by projects with the highest budget per employee first.
+
+
+# Answer:
+
+with empinproj as(
+    select project_id, count(*) as total_employees
+    from ms_emp_projects
+    group by project_id
+    )
+
+select m.title, round(m.budget/e.total_employees) as project_budget
+from ms_projects m
+join empinproj e
+on e.project_id = m.id
+order by project_budget desc;
