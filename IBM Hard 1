@@ -1,0 +1,24 @@
+# Question:
+
+IBM is working on a new feature to analyze user purchasing behavior for all Fridays in the first quarter of the year. For each Friday separately, calculate the average amount users have spent per order. The output should contain the week number of that Friday and average amount spent.
+
+
+# Answer:
+
+with recursive cte1 as (
+    select 1 as week_number
+    union all
+    select week_number + 1
+    from cte1 where week_number < 13),
+    
+cte2 as (
+    select week(date) as week_number, avg(amount_spent) as mean_amount
+    from user_purchases
+    where dayname(date) = 'Friday' and quarter(date) = 1
+    group by week(date))
+    
+select cte1.week_number, 
+    coalesce(cte2.mean_amount, 0) as mean_amount
+from cte1
+left join cte2
+on cte1.week_number = cte2.week_number;
