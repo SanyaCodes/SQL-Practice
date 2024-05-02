@@ -1,0 +1,12 @@
+# Question:
+
+Rank each host based on the number of beds they have listed. The host with the most beds should be ranked 1 and the host with the least number of beds should be ranked last. Hosts that have the same number of beds should have the same rank but there should be no gaps between ranking values. A host can also own multiple properties. Output the host ID, number of beds, and rank from highest rank to lowest.
+
+
+# Answer:
+
+select host_id, sum(n_beds) total_beds, dense_rank() over(order by sum(n_beds) desc) rank_number
+from airbnb_apartments
+group by 1;
+
+Important Note - There exists different ranking functions in SQL. One of them is ROW_NUMBER() which assigns one number to each row, no duplicates allowed. Another one is RANK() which assigns rank to each row and if the rank needs to be the same, it assigns the same rank but skips numbers to match the row number as well. Then there is DENSE_RANK() which assigns the same rank as before but doesn’t skip ranks to match up to the row number. The last one is NTILE(N) which assigns rank but divides the distribution into N specified groups. You can use ‘partition by’ in the first 3 to partition based on certain row values and make relevant groups.
