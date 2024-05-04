@@ -1,0 +1,29 @@
+# Question:
+
+You have been asked to find the employees with the highest and lowest salary. Your output should include the employee's ID, salary, and department, as well as a column salary_type that categorizes the output by:
+'Highest Salary' represents the highest salary
+'Lowest Salary' represents the lowest salary
+
+
+# Answer:
+
+with salary_rank as (
+    select worker_id, 
+        salary, 
+        department,
+        dense_rank() over(order by salary desc) rank_number
+    from worker),
+    
+type as (
+    select worker_id, 
+        salary, 
+        department,
+        case
+            when rank_number = 1 then 'Highest Salary'
+            when rank_number = 9 then 'Lowest Salary'
+        end salary_type
+    from salary_rank)
+    
+select *
+from type
+where salary_type = 'Highest Salary' or salary_type = 'Lowest Salary';
