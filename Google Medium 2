@@ -1,0 +1,11 @@
+# Question:
+
+To retrieve the first and last names of doctors in the employee list with the last name 'Johnson', you need to write a SQL query that filters based on two conditions. We are looking for entries in the table where the last_name column matches 'Johnson' and the profession column matches 'Doctor'.
+
+
+# Answer:
+
+select first_name, last_name
+from employee_list
+where profession = "Doctor" 
+and last_name = "Johnson";
